@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koşullu Resim Gösterme</title>
+<script>
+  function showImage(value) {
+    const imageElement = document.getElementById("image");
+    if (value < 10) {
+      imageElement.src = "a.jpg"; // Değer 10’un altındaysa A resmini göster
+    } else {
+      imageElement.src = "b.jpg"; // Değer 10’dan büyük veya eşitse B resmini göster
+    }
+  }
+
+  // Sayfa yüklendiğinde fonksiyonu çalıştırmak için örnek değer belirleme
+  document.addEventListener("DOMContentLoaded", function() {
+    const value = 8; // Burada kontrol etmek istediğiniz değeri belirleyin
+    showImage(value);
+  });
+</script>
+</head>
+<body>
+
+<img id="image" alt="Koşullu Resim" />
+
+</body>
+</html>
