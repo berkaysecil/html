@@ -1,0 +1,22 @@
+const codeArea = document.querySelector('.code-area');
+const lineNumbers = document.querySelector('.line-numbers');
+
+codeArea.addEventListener('input', updateLineNumbers);
+codeArea.addEventListener('scroll', syncScroll);
+
+function updateLineNumbers() {
+  const lines = codeArea.value.split('\n');
+  lineNumbers.innerHTML = '';
+  lines.forEach((_, index) => {
+    const lineNumber = document.createElement('div');
+    lineNumber.textContent = index + 1;
+    lineNumbers.appendChild(lineNumber);
+  });
+}
+
+function syncScroll() {
+  lineNumbers.scrollTop = codeArea.scrollTop;
+}
+
+// Initial call to populate line numbers
+updateLineNumbers();
