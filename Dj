@@ -1,0 +1,45 @@
+$(document).ready(function () {
+    // URL’den mevcut filtreleri alalım
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterName = urlParams.get("filter_name");
+    const filterPage = urlParams.get("filter_page");
+
+    // Eğer URL’de filtreler varsa inputlara yazalım
+    if (filterName) $("#myInput2").val(filterName);
+    if (filterPage) $("#myInput4").val(filterPage);
+
+    // Filtreleme fonksiyonu
+    function filterTable() {
+        var value2 = $("#myInput2").val().toLowerCase();
+        var value4 = $("#myInput4").val().toLowerCase();
+
+        $("#myTable tr").each(function () {
+            var text2 = $(this).find("td:nth-child(2)").text().toLowerCase();
+            var text4 = $(this).find("td:nth-child(4)").text().toLowerCase();
+
+            var match2 = value2 === "" || text2.indexOf(value2) > -1;
+            var match4 = value4 === "" || text4.indexOf(value4) > -1;
+
+            $(this).toggle(match2 && match4);
+        });
+
+        // Filtreler değiştikçe URL’i güncelleyelim
+        const params = new URLSearchParams();
+        if (value2) params.set("filter_name", value2);
+        if (value4) params.set("filter_page", value4);
+
+        // URL’yi güncelle, sayfa yenilenmeden
+        window.history.replaceState({}, "", `${window.location.pathname}?${params}`);
+    }
+
+    // Inputlara event bağlayalım
+    $("#myInput2, #myInput4").on("keyup", filterTable);
+
+    // Sayfa açıldığında otomatik filtre uygula
+    filterTable();
+});
+
+// Filtre temizleme butonu
+function clearFilters() {
+    window.location.href = window.location.pathname;  // URL’deki filtreleri sıfırla
+}
