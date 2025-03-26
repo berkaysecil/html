@@ -1,45 +1,111 @@
+from django.http import JsonResponse
+from django.core.paginator import Paginator
+from .models import YourModel
+
+def your_view(request):
+    queryset = YourModel.objects.all()
+
+    # Filtreleme
+    filter_name = request.GET.get('filter_name', '')
+    filter_page = request.GET.get('filter_page', '')
+
+    if filter_name:
+        queryset = queryset.filter(name__icontains=filter_name)
+    if filter_page:
+        queryset = queryset.filter(page_name__icontains=filter_page)
+
+    # Sayfalama
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page')
+    records = paginator.get_page(page_number)
+
+    # AJAX isteğine JSON döndür
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = [
+            {"name": record.name, "page_name": record.page_name}
+            for record in records
+        ]
+        return JsonResponse({"data": data})
+
+    return render(request, 'your_template.html', {'records': records})
+
+
+
+
+
+<tr>
+    <th scope="col">
+        <button type="reset" class="btn m-0 p-0" onclick="clearFilters()">
+            <i class="bi bi-x-lg text-danger"></i>
+        </button>
+    </th>
+    <th><input class="form-control" id="myInput2" name="filter_name" type="text" placeholder="Kişi.."></th>
+    <th></th>
+    <th><input class="form-control" id="myInput4" name="filter_page" type="text" placeholder="Sayfa Adı.."></th>
+    <th></th>
+</tr>
+
+<table id="myTable">
+    <thead>
+        <tr>
+            <th>Kişi</th>
+            <th>Sayfa Adı</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.name }}</td>
+            <td>{{ record.page_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
 $(document).ready(function () {
-    // URL’den mevcut filtreleri alalım
-    const urlParams = new URLSearchParams(window.location.search);
-    const filterName = urlParams.get("filter_name");
-    const filterPage = urlParams.get("filter_page");
-
-    // Eğer URL’de filtreler varsa inputlara yazalım
-    if (filterName) $("#myInput2").val(filterName);
-    if (filterPage) $("#myInput4").val(filterPage);
-
     // Filtreleme fonksiyonu
     function filterTable() {
-        var value2 = $("#myInput2").val().toLowerCase();
-        var value4 = $("#myInput4").val().toLowerCase();
+        let filterName = $("#myInput2").val();
+        let filterPage = $("#myInput4").val();
 
-        $("#myTable tr").each(function () {
-            var text2 = $(this).find("td:nth-child(2)").text().toLowerCase();
-            var text4 = $(this).find("td:nth-child(4)").text().toLowerCase();
+        $.ajax({
+            url: window.location.pathname,
+            type: "GET",
+            data: {
+                filter_name: filterName,
+                filter_page: filterPage,
+            },
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            success: function (response) {
+                let tbody = $("#myTable tbody");
+                tbody.empty();  // Eski verileri temizle
 
-            var match2 = value2 === "" || text2.indexOf(value2) > -1;
-            var match4 = value4 === "" || text4.indexOf(value4) > -1;
+                // Yeni gelen verileri tabloya ekleyelim
+                response.data.forEach((item) => {
+                    tbody.append(`<tr><td>${item.name}</td><td>${item.page_name}</td></tr>`);
+                });
 
-            $(this).toggle(match2 && match4);
+                // URL’i filtrelerle güncelle
+                const params = new URLSearchParams();
+                if (filterName) params.set("filter_name", filterName);
+                if (filterPage) params.set("filter_page", filterPage);
+                window.history.replaceState({}, "", `${window.location.pathname}?${params}`);
+            },
         });
-
-        // Filtreler değiştikçe URL’i güncelleyelim
-        const params = new URLSearchParams();
-        if (value2) params.set("filter_name", value2);
-        if (value4) params.set("filter_page", value4);
-
-        // URL’yi güncelle, sayfa yenilenmeden
-        window.history.replaceState({}, "", `${window.location.pathname}?${params}`);
     }
 
-    // Inputlara event bağlayalım
+    // Inputlara event bağla
     $("#myInput2, #myInput4").on("keyup", filterTable);
 
-    // Sayfa açıldığında otomatik filtre uygula
+    // Sayfa açıldığında otomatik filtre uygula (URL’de varsa)
     filterTable();
-});
 
-// Filtre temizleme butonu
-function clearFilters() {
-    window.location.href = window.location.pathname;  // URL’deki filtreleri sıfırla
-}
+    // Filtre temizleme butonu
+    window.clearFilters = function () {
+        window.location.href = window.location.pathname;  // URL'deki filtreleri sıfırla
+    };
+});
