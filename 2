@@ -1,60 +1,42 @@
 <svg width="100%" height="100%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Arka plan degrade -->
-    <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0d0a3f"/>
-      <stop offset="100%" stop-color="#192a3f"/>
-    </linearGradient>
-
-    <!-- Küp yüzeyleri -->
-    <linearGradient id="cubeTop" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#3f3fc2"/>
-      <stop offset="100%" stop-color="#2a394c"/>
-    </linearGradient>
-    <linearGradient id="cubeLeft" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2a394c"/>
-      <stop offset="100%" stop-color="#192a3f"/>
-    </linearGradient>
-    <linearGradient id="cubeRight" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0d0a3f"/>
-      <stop offset="100%" stop-color="#3f3fc2"/>
-    </linearGradient>
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#0d0a3f" />
+      <stop offset="100%" stop-color="#192a3f" />
+    </radialGradient>
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3f3fc2" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#3f3fc2" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
   <!-- Arka plan -->
   <rect width="100%" height="100%" fill="url(#bgGradient)" />
 
-  <!-- Grid çizgileri -->
-  <g stroke="#2a394c55" stroke-width="1">
-    <line x1="0" y1="50" x2="800" y2="50"/>
-    <line x1="0" y1="100" x2="800" y2="100"/>
-    <line x1="0" y1="150" x2="800" y2="150"/>
-    <line x1="0" y1="200" x2="800" y2="200"/>
-    <line x1="0" y1="250" x2="800" y2="250"/>
-    <line x1="0" y1="300" x2="800" y2="300"/>
-    <line x1="50" y1="0" x2="50" y2="600"/>
-    <line x1="100" y1="0" x2="100" y2="600"/>
-    <line x1="150" y1="0" x2="150" y2="600"/>
-    <line x1="200" y1="0" x2="200" y2="600"/>
-    <line x1="250" y1="0" x2="250" y2="600"/>
-    <line x1="300" y1="0" x2="300" y2="600"/>
+  <!-- Bağlantılar -->
+  <g stroke="#2a394c" stroke-width="1" opacity="0.3">
+    <line x1="200" y1="200" x2="400" y2="300"/>
+    <line x1="400" y1="300" x2="600" y2="180"/>
+    <line x1="200" y1="200" x2="300" y2="100"/>
+    <line x1="300" y1="100" x2="600" y2="180"/>
+    <line x1="300" y1="100" x2="500" y2="70"/>
   </g>
 
-  <!-- Küpler -->
-  <g transform="translate(120, 380)">
-    <polygon points="0,0 40,-20 80,0 40,20" fill="url(#cubeTop)" />
-    <polygon points="0,0 0,-40 40,-60 40,-20" fill="url(#cubeLeft)" />
-    <polygon points="80,0 80,-40 40,-60 40,-20" fill="url(#cubeRight)" />
-  </g>
+  <!-- Veri noktaları -->
+  <circle cx="200" cy="200" r="10" fill="url(#nodeGlow)" />
+  <circle cx="400" cy="300" r="12" fill="url(#nodeGlow)" />
+  <circle cx="600" cy="180" r="8" fill="url(#nodeGlow)" />
+  <circle cx="300" cy="100" r="9" fill="url(#nodeGlow)" />
+  <circle cx="500" cy="70" r="7" fill="url(#nodeGlow)" />
 
-  <g transform="translate(300, 300)">
-    <polygon points="0,0 40,-20 80,0 40,20" fill="url(#cubeTop)" />
-    <polygon points="0,0 0,-40 40,-60 40,-20" fill="url(#cubeLeft)" />
-    <polygon points="80,0 80,-40 40,-60 40,-20" fill="url(#cubeRight)" />
-  </g>
+  <!-- Hafif parıltı halkaları -->
+  <circle cx="400" cy="300" r="24" stroke="#3f3fc2" stroke-opacity="0.2" fill="none"/>
+  <circle cx="200" cy="200" r="20" stroke="#2a394c" stroke-opacity="0.2" fill="none"/>
+  <circle cx="300" cy="100" r="16" stroke="#3f3fc2" stroke-opacity="0.1" fill="none"/>
 
-  <!-- Veri akışını temsil eden noktalar -->
-  <circle cx="220" cy="100" r="3" fill="#3f3fc2" opacity="0.8"/>
-  <circle cx="230" cy="110" r="2.5" fill="#2a394c" opacity="0.8"/>
-  <circle cx="240" cy="120" r="2" fill="#3f3fc2" opacity="0.8"/>
+  <!-- Soyut data noktaları (küçük noktacıklar) -->
+  <circle cx="100" cy="500" r="2" fill="#3f3fc2" opacity="0.4"/>
+  <circle cx="150" cy="450" r="1.5" fill="#2a394c" opacity="0.3"/>
+  <circle cx="700" cy="400" r="2" fill="#3f3fc2" opacity="0.5"/>
+  <circle cx="680" cy="420" r="1.2" fill="#2a394c" opacity="0.3"/>
 </svg>
